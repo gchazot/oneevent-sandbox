@@ -25,7 +25,9 @@ SECRET_KEY = '2chbzzpgkr0#%n)9%v(d=#c=mf2n+vp!b@^**o2o28nzd@_p(@'
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = [
+    'oneevent-sandbox.herokuapp.com',
+]
 
 
 # Application definition
