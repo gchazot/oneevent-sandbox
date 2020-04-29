@@ -1,2 +1,3 @@
+gunicorn
 Django==1.11.29
 django-oneevent==0.3.1.1
