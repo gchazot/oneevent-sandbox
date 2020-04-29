@@ -77,10 +77,21 @@ WSGI_APPLICATION = 'oneevent_site.wsgi.application'
 # Database
 # https://docs.djangoproject.com/en/1.11/ref/settings/#databases
 
+DATABASE_URL = os.environ['DATABASE_URL']
+db_connection_string = DATABASE_URL.split('//')[1]
+db_user_password, db_host_port_name = db_connection_string.split('@')
+db_user, db_password = db_user_password.split(':')
+db_host_port, db_name = db_host_port_name.split('/')
+db_host, db_port = db_host_port.split(':')
+
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': os.path.join(BASE_DIR, 'db.sqlite3'),
+        'ENGINE': 'django.db.backends.postgresql',
+        'NAME': db_name,
+        'USER': db_user,
+        'PASSWORD': db_password,
+        'HOST': db_host,
+        'PORT': db_port,
     }
 }
 
