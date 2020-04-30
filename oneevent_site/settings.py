@@ -27,7 +27,7 @@ DEBUG = os.environ.get('DJANGO_DEBUG', False) in ('1', 'True')
 DEVELOPMENT = os.environ.get('DJANGO_DEVELOPMENT', False) in ('1', 'True')
 
 if DEVELOPMENT:
-    ALLOWED_HOSTS = []
+    ALLOWED_HOSTS = ['*']
 else:
     ALLOWED_HOSTS = [
         'oneevent-sandbox.herokuapp.com',
