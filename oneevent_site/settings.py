@@ -23,14 +23,15 @@ BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 SECRET_KEY = os.environ.get('SECRET_KEY', 'This is just a development key, not for Production"')
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = os.environ.get('DJANGO_DEBUG', False)
+DEBUG = os.environ.get('DJANGO_DEBUG', False) in ('1', 'True')
+DEVELOPMENT = os.environ.get('DJANGO_DEVELOPMENT', False) in ('1', 'True')
 
-if not DEBUG:
+if DEVELOPMENT:
+    ALLOWED_HOSTS = []
+else:
     ALLOWED_HOSTS = [
         'oneevent-sandbox.herokuapp.com',
     ]
-else:
-    ALLOWED_HOSTS = []
 
 
 # Application definition
@@ -81,8 +82,15 @@ WSGI_APPLICATION = 'oneevent_site.wsgi.application'
 # Database
 # https://docs.djangoproject.com/en/1.11/ref/settings/#databases
 
-DATABASE_URL = os.environ.get('DATABASE_URL')
-if DATABASE_URL:
+if DEVELOPMENT:
+    DATABASES = {
+        'default': {
+            'ENGINE': 'django.db.backends.sqlite3',
+            'NAME': os.path.join(BASE_DIR, 'db.sqlite3'),
+        }
+    }
+else:
+    DATABASE_URL = os.environ.get('DATABASE_URL')
     db_connection_string = DATABASE_URL.split('//')[1]
     db_user_password, db_host_port_name = db_connection_string.split('@')
     db_user, db_password = db_user_password.split(':')
@@ -97,13 +105,6 @@ if DATABASE_URL:
             'PASSWORD': db_password,
             'HOST': db_host,
             'PORT': db_port,
-        }
-    }
-else:
-    DATABASES = {
-        'default': {
-            'ENGINE': 'django.db.backends.sqlite3',
-            'NAME': os.path.join(BASE_DIR, 'db.sqlite3'),
         }
     }
 
