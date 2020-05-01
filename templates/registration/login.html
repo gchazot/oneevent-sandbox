@@ -1,0 +1,45 @@
+{% extends "oneevent/base.html" %}
+{% load crispy_forms_tags static %}
+
+{% block content %}
+
+<div class="panel panel-info">
+    <div class="panel-heading">
+        <strong>User account</strong>
+    </div>
+    <div class="panel-body" >
+
+        {% if form.errors %}
+        <p>Your username and password didn't match. Please try again.</p>
+        {% endif %}
+
+        <form role="form" method="post" action="{% url 'login' %}">
+        {% csrf_token %}
+            {{ form|crispy }}
+            <input class="btn btn-default" type="submit" value="login" />
+            <input type="hidden" name="next" value="{{ next }}" />
+        </form>
+    </div>
+</div>
+
+<div class="panel panel-info">
+    <div class="panel-heading">
+        <strong>Or login with your favourite provider</strong>
+    </div>
+    <div class="panel-body" >
+
+        {% if "google-oauth2" in backends.backends %}
+            <a href="{% url "social:begin" "google-oauth2" %}">
+                <img class="btn btn-lg" src="{% static "signin_buttons/google.png" %}" />
+            </a>
+        {% endif %}
+
+        {% if "github" in backends.backends %}
+            <a href="{% url "social:begin" "github" %}">
+                <img class="btn btn-lg" src="{% static "signin_buttons/github.png" %}" />
+            </a>
+        {% endif %}
+    </div>
+</div>
+
+{% endblock %}
