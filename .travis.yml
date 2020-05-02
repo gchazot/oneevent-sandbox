@@ -1,5 +1,11 @@
 language: python
 python:
   - '2.7'
+env:
+  - DJANGO_DEVELOPMENT="1"
+  - GOOGLE_OAUTH2_KEY=""
+  - GOOGLE_OAUTH2_SECRET=""
+  - GITHUB_KEY=""
+  - GITHUB_SECRET=""
 script:
   - "python manage.py check"
