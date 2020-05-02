@@ -9,3 +9,5 @@ env:
   - GITHUB_SECRET=""
 script:
   - "python manage.py check"
+  - "python manage.py test"
+  - "python manage.py makemigrations --dry-run --check"
