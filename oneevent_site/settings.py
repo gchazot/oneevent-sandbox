@@ -78,6 +78,7 @@ TEMPLATES = [
                 'django.contrib.messages.context_processors.messages',
                 'social_django.context_processors.backends',
                 'social_django.context_processors.login_redirect',
+                'oneevent_site.context_processors.social_auth_extra_data',
             ],
         },
     },
@@ -168,6 +169,15 @@ if SOCIAL_AUTH_GITHUB_KEY and SOCIAL_AUTH_GITHUB_SECRET:
     AUTHENTICATION_BACKENDS = (
         'social_core.backends.github.GithubOAuth2',
     ) + AUTHENTICATION_BACKENDS
+
+
+SOCIAL_AUTH_GOOGLE_OAUTH2_EXTRA_DATA = [
+    ('picture', 'user_avatar')
+]
+SOCIAL_AUTH_GITHUB_EXTRA_DATA = [
+    ('avatar_url', 'user_avatar')
+]
+
 
 # Internationalization
 # https://docs.djangoproject.com/en/1.11/topics/i18n/
