@@ -1,7 +1,7 @@
-gunicorn
-Django==1.11.29
-django-oneevent==0.3.1.1
-psycopg2==2.7.7
-whitenoise<5
-social-auth-app-django
-django_extensions
+gunicorn==20.0.4
+Django==3.0.6
+django-oneevent==1.0.0b1
+psycopg2==2.8.5
+whitenoise==5.0q.1
+social-auth-app-django==3.1.0
+django_extensions==2.2.9
