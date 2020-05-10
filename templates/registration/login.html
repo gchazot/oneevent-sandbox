@@ -10,26 +10,7 @@
 
 <div class="panel panel-info">
     <div class="panel-heading">
-        <strong>User account</strong>
-    </div>
-    <div class="panel-body" >
-
-        {% if form.errors %}
-        <p>Your username and password didn't match. Please try again.</p>
-        {% endif %}
-
-        <form role="form" method="post" action="{% url 'login' %}">
-        {% csrf_token %}
-            {{ form|crispy }}
-            <input class="btn btn-default" type="submit" value="login" />
-            <input type="hidden" name="next" value="{{ next }}" />
-        </form>
-    </div>
-</div>
-
-<div class="panel panel-info">
-    <div class="panel-heading">
-        <strong>Or login with your favourite provider</strong>
+        <strong>Login with your favourite provider</strong>
     </div>
     <div class="panel-body" >
 
@@ -44,6 +25,28 @@
                 <img class="btn btn-lg" src="{% static "signin_buttons/github.png" %}" />
             </a>
         {% endif %}
+    </div>
+</div>
+
+<div class="panel panel-info collapsible-caret">
+    <div class="panel-heading collapsible-toggle collapsed"
+         data-toggle="collapse" data-target="#collapseUserLogin">
+        <strong>User sign-in</strong>
+    </div>
+    <div id="collapseUserLogin" class="panel-collapse collapse table-responsive">
+        <div class="panel-body" >
+
+            {% if form.errors %}
+            <p>Your username and password didn't match. Please try again.</p>
+            {% endif %}
+
+            <form role="form" method="post" action="{% url 'login' %}">
+            {% csrf_token %}
+                {{ form|crispy }}
+                <input class="btn btn-default" type="submit" value="login" />
+                <input type="hidden" name="next" value="{{ next }}" />
+            </form>
+        </div>
     </div>
 </div>
 
