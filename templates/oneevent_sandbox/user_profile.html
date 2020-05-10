@@ -1,4 +1,5 @@
 {% extends "oneevent/base.html" %}
+{% load crispy_forms_tags %}
 
 
 {% block navbar_breadcrumbs %}
@@ -10,5 +11,33 @@
 {% block heading_title %}{{ user.get_full_name }}{% endblock %}
 
 {% block content %}
+    <div class="panel panel-info collapsible-caret">
+        <div class="panel-heading collapsible-toggle"
+             data-toggle="collapse" data-target="#collapseUserDetails">
+            <span>Account details</span>
+        </div>
+        <div id="collapseUserDetails" class="panel-collapse collapse in table-responsive">
+            <div class="panel-body">
+                {% crispy user_form %}
+            </div>
+        </div>
+    </div>
+    <div class="panel panel-danger collapsible-caret">
+        <div class="panel-heading collapsible-toggle collapsed"
+             data-toggle="collapse" data-target="#collapseDeleteAccount">
+            <span>Danger zone</span>
+        </div>
+        <div id="collapseDeleteAccount" class="panel-collapse collapse table-responsive">
+            <div class="panel-body">
+                <a href="{% url 'user_delete' %}"
+                    onclick="avoid_collapse_toggle(event)"
+                    class="btn btn-danger"
+                >
+                    Delete my account
+                </a>
+                <span><strong>Permanently</strong> delete my account and all associated data.</span>
+            </div>
+        </div>
+    </div>
 
 {% endblock %}
