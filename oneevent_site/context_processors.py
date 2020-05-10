@@ -1,3 +1,6 @@
+from social_django.models import UserSocialAuth
+
+
 def social_auth_extra_data(request):
     social = _get_prefered_social(request.user)
 
@@ -13,5 +16,5 @@ def _get_prefered_social(user):
         for provider in ('google-oauth2', 'github'):
             try:
                 return user.social_auth.get(provider=provider)
-            except user.social_auth.DoesNotExist:
+            except UserSocialAuth.DoesNotExist:
                 continue
