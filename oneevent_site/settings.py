@@ -78,6 +78,7 @@ TEMPLATES = [
                 'django.contrib.messages.context_processors.messages',
                 'social_django.context_processors.backends',
                 'social_django.context_processors.login_redirect',
+                'oneevent_site.context_processors.social_auth_extra_data',
             ],
         },
     },
@@ -169,6 +170,15 @@ if SOCIAL_AUTH_GITHUB_KEY and SOCIAL_AUTH_GITHUB_SECRET:
         'social_core.backends.github.GithubOAuth2',
     ) + AUTHENTICATION_BACKENDS
 
+
+SOCIAL_AUTH_GOOGLE_OAUTH2_EXTRA_DATA = [
+    ('picture', 'user_avatar')
+]
+SOCIAL_AUTH_GITHUB_EXTRA_DATA = [
+    ('avatar_url', 'user_avatar')
+]
+
+
 # Internationalization
 # https://docs.djangoproject.com/en/1.11/topics/i18n/
 
@@ -190,14 +200,4 @@ STATIC_URL = '/static/'
 STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
 STATICFILES_DIRS = [os.path.join(BASE_DIR, 'static')]
 
-TEMPLATES[0]['OPTIONS']['context_processors'].append('oneevent.context_processors.customise_navbar')
-
-# Override the "error" message level to match the bootstrap "danger" class
-from django.contrib import messages
-MESSAGE_TAGS = {
-    messages.ERROR: 'danger',
-}
-
-# django-crispy-forms template pack
-CRISPY_TEMPLATE_PACK = 'bootstrap3'
-
+ONEEVENT_SITE_BRAND = "OneEvent Sandbox"

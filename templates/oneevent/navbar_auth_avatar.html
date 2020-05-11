@@ -1,0 +1,6 @@
+<img src="{{ user_avatar_url }}"
+     alt="User avatar image"
+     class="img-circle"
+     style="width: 25px; height: 25px; margin: -10px 5px"
+/>
+<span>{{ user.get_full_name|default:user.email|default:user.username }}</span>
