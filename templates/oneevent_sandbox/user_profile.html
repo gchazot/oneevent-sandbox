@@ -1,4 +1,5 @@
 {% extends "oneevent/base.html" %}
+{% load static %}
 {% load crispy_forms_tags %}
 
 
@@ -22,6 +23,55 @@
             </div>
         </div>
     </div>
+    <div class="panel panel-info collapsible-caret">
+        <div class="panel-heading collapsible-toggle"
+             data-toggle="collapse" data-target="#collapseSocialAuth">
+            <span>Linked accounts</span>
+        </div>
+        <div id="collapseSocialAuth" class="panel-collapse collapse in table-responsive">
+            <div class="panel-body container-fluid">
+                <div class="row">
+                    {% for social in user.social_auth.all %}
+                        <div class="col-sm-12 col-md-6 col-lg-4">
+                            {% if social.provider == "google-oauth2" %}
+                                <form
+                                    action="{% url "social:disconnect" "google-oauth2" %}"
+                                    method="post"
+                                >
+                                    {% csrf_token %}
+                                    <input type="hidden" name="next" value="{% url "user_profile" %}">
+                                    <img src="{% static "social_provider_icons/google.png" %}"/>
+                                    <span>Google</span>
+                                    (<button
+                                        type="submit"
+                                        class="btn btn-link"
+                                        style="padding: 0; border: 0;"
+                                >disconnect account</button>)
+                                </form>
+                            {% endif %}
+
+                            {% if social.provider == "github" %}
+                                <form
+                                    action="{% url "social:disconnect" "github" %}"
+                                    method="post"
+                                >
+                                    {% csrf_token %}
+                                    <input type="hidden" name="next" value="{% url "user_profile" %}">
+                                    <img src="{% static "social_provider_icons/github.png" %}"/>
+                                    <span>Github</span>
+                                    (<button
+                                        type="submit"
+                                        class="btn btn-link"
+                                        style="padding: 0; border: 0;"
+                                >disconnect account</button>)
+                                </form>
+                            {% endif %}
+                        </div>
+                    {% endfor %}
+                </div>
+            </div>
+        </div>
+    </div>
     <div class="panel panel-danger collapsible-caret">
         <div class="panel-heading collapsible-toggle collapsed"
              data-toggle="collapse" data-target="#collapseDeleteAccount">
@@ -30,8 +80,8 @@
         <div id="collapseDeleteAccount" class="panel-collapse collapse table-responsive">
             <div class="panel-body">
                 <a href="{% url 'user_delete' %}"
-                    onclick="avoid_collapse_toggle(event)"
-                    class="btn btn-danger"
+                   onclick="avoid_collapse_toggle(event)"
+                   class="btn btn-danger"
                 >
                     Delete my account
                 </a>
