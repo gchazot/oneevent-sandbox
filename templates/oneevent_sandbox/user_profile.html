@@ -35,7 +35,7 @@
                         <div class="col-sm-12 col-md-6 col-lg-4">
                             {% if social.provider == "google-oauth2" %}
                                 <form
-                                    action="{% url "social:disconnect" "google-oauth2" %}"
+                                    action="{% url "user_disconnect_social_auth" "google-oauth2" %}"
                                     method="post"
                                 >
                                     {% csrf_token %}
@@ -52,7 +52,7 @@
 
                             {% if social.provider == "github" %}
                                 <form
-                                    action="{% url "social:disconnect" "github" %}"
+                                    action="{% url "user_disconnect_social_auth" "github" %}"
                                     method="post"
                                 >
                                     {% csrf_token %}
