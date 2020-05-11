@@ -31,43 +31,11 @@
         <div id="collapseSocialAuth" class="panel-collapse collapse in table-responsive">
             <div class="panel-body container-fluid">
                 <div class="row">
-                    {% for social in user.social_auth.all %}
-                        <div class="col-sm-12 col-md-6 col-lg-4">
-                            {% if social.provider == "google-oauth2" %}
-                                <form
-                                    action="{% url "user_disconnect_social_auth" "google-oauth2" %}"
-                                    method="post"
-                                >
-                                    {% csrf_token %}
-                                    <input type="hidden" name="next" value="{% url "user_profile" %}">
-                                    <img src="{% static "social_provider_icons/google.png" %}"/>
-                                    <span>Google</span>
-                                    (<button
-                                        type="submit"
-                                        class="btn btn-link"
-                                        style="padding: 0; border: 0;"
-                                >disconnect account</button>)
-                                </form>
-                            {% endif %}
-
-                            {% if social.provider == "github" %}
-                                <form
-                                    action="{% url "user_disconnect_social_auth" "github" %}"
-                                    method="post"
-                                >
-                                    {% csrf_token %}
-                                    <input type="hidden" name="next" value="{% url "user_profile" %}">
-                                    <img src="{% static "social_provider_icons/github.png" %}"/>
-                                    <span>Github</span>
-                                    (<button
-                                        type="submit"
-                                        class="btn btn-link"
-                                        style="padding: 0; border: 0;"
-                                >disconnect account</button>)
-                                </form>
-                            {% endif %}
-                        </div>
-                    {% endfor %}
+                {% for form in disconnect_forms %}
+                    <div class="col-sm-12 col-md-6 col-lg-4">
+                        {% crispy form %}
+                    </div>
+                {%  endfor %}
                 </div>
             </div>
         </div>
