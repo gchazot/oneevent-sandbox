@@ -17,6 +17,9 @@ def enforce_email(request, details, user, *args, **kwargs):
             "Please make sure it is configured and verified in the provider's settings page.",
         )
         return redirect("login")
+    elif user and not user.email:
+       user.email = email
+       user.save()
 
 
 def facebook_avatar_url(social, backend, *args, **kwargs):
