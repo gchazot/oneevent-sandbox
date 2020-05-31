@@ -155,29 +155,31 @@ SOCIAL_AUTH_PIPELINE = (
 )
 
 
-for setting_name, backend_name, scope, extra_data in [
-    ('GOOGLE_OAUTH2', 'google.GoogleOAuth2', None, [('picture', 'user_avatar')]),
-    ('GITHUB', 'github.GithubOAuth2', ['user:email'], [('avatar_url', 'user_avatar')]),
-    ('FACEBOOK', 'facebook.FacebookOAuth2', ['email'], None),
+for backend_setting_name, backend_name, scope, extra_data, profile_extra_params in [
+    ('GOOGLE_OAUTH2', 'google.GoogleOAuth2', None, [('picture', 'user_avatar')], None),
+    ('GITHUB', 'github.GithubOAuth2', ['user:email'], [('avatar_url', 'user_avatar')], None),
+    ('FACEBOOK', 'facebook.FacebookOAuth2', ['email'], None, {'fields': 'id, name, email'}),
 ]:
-    key_env = setting_name + '_KEY'
-    secret_env = setting_name + '_SECRET'
+    def setting_name(setting):
+        return '_'.join(['SOCIAL_AUTH', backend_setting_name, setting])
 
-    key = os.environ.get(key_env)
-    secret = os.environ.get(secret_env)
+    def add(setting, value):
+        if value is not None:
+            globals()[setting_name(setting)] = value
+
+    key = os.environ.get(f'{backend_setting_name}_KEY')
+    secret = os.environ.get(f'{backend_setting_name}_SECRET')
 
     if key and secret:
-        vars()['SOCIAL_AUTH_' + key_env] = key
-        vars()['SOCIAL_AUTH_' + secret_env] = secret
-
         AUTHENTICATION_BACKENDS = (
           'social_core.backends.' + backend_name,
         ) + AUTHENTICATION_BACKENDS
 
-        if scope:
-            vars()['SOCIAL_AUTH_' + setting_name + '_SCOPE'] = scope
-        if extra_data:
-            vars()['SOCIAL_AUTH_' + setting_name + '_EXTRA_DATA'] = extra_data
+        add('KEY', key)
+        add('SECRET', secret)
+        add('SCOPE', scope)
+        add('EXTRA_DATA', extra_data)
+        add('PROFILE_EXTRA_PARAMS', profile_extra_params)
 
 
 # Internationalization
