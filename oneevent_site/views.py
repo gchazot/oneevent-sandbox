@@ -58,7 +58,7 @@ def get_social_auth_display_name(social_auth):
     return {
         'github': 'Github',
         'google-oauth2': 'Google',
-        'facebook': 'facebook',
+        'facebook': 'Facebook',
     }.get(social_auth)
 
 
