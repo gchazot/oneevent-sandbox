@@ -5,16 +5,8 @@ def social_auth_extra_data(request):
         return {}
 
     return {
-        'user_avatar_url': _get_social_avatar_url(social),
+        'user_avatar_url': social.extra_data.get('user_avatar', ''),
     }
-
-
-def _get_social_avatar_url(social):
-    if social.provider == 'facebook':
-        facebook_id = social.extra_data.get('id')
-        return f'http://graph.facebook.com/{facebook_id}/picture?type=small'
-    else:
-        return social.extra_data.get('user_avatar')
 
 
 def _get_prefered_social(user):

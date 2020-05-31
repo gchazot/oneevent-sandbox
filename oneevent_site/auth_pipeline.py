@@ -17,3 +17,11 @@ def enforce_email(request, details, user, *args, **kwargs):
             "Please make sure it is configured and verified in the provider's settings page.",
         )
         return redirect("login")
+
+
+def facebook_avatar_url(social, backend, *args, **kwargs):
+    if backend.name == 'facebook':
+        facebook_id = social.extra_data['id']
+        avatar_url = f'http://graph.facebook.com/{facebook_id}/picture?type=small'
+        social.extra_data['user_avatar'] = avatar_url
+        social.save()

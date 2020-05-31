@@ -152,6 +152,7 @@ SOCIAL_AUTH_PIPELINE = (
     'social_core.pipeline.user.create_user',
     'social_core.pipeline.social_auth.associate_user',
     'social_core.pipeline.social_auth.load_extra_data',
+    'oneevent_site.auth_pipeline.facebook_avatar_url',
     'social_core.pipeline.user.user_details',
 )
 
