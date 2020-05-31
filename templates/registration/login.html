@@ -25,6 +25,12 @@
                 <img class="btn btn-lg" src="{% static "signin_buttons/github.png" %}" />
             </a>
         {% endif %}
+
+        {% if "facebook" in backends.backends %}
+            <a href="{% url "social:begin" "facebook" %}">
+                <img class="btn btn-lg" src="{% static "signin_buttons/facebook.png" %}" />
+            </a>
+        {% endif %}
     </div>
 </div>
 

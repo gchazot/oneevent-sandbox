@@ -158,6 +158,7 @@ SOCIAL_AUTH_PIPELINE = (
 for setting_name, backend_name, scope, extra_data in [
     ('GOOGLE_OAUTH2', 'google.GoogleOAuth2', None, [('picture', 'user_avatar')]),
     ('GITHUB', 'github.GithubOAuth2', ['user:email'], [('avatar_url', 'user_avatar')]),
+    ('FACEBOOK', 'facebook.FacebookOAuth2', ['email'], None),
 ]:
     key_env = setting_name + '_KEY'
     secret_env = setting_name + '_SECRET'

@@ -65,6 +65,7 @@ def get_social_auth_icon_url(social_auth):
     icon_name = {
         'github': 'github',
         "google-oauth2": "google",
+        'facebook': 'facebook',
     }.get(social_auth)
     return static(f"social_provider_icons/{icon_name}.png")
 
