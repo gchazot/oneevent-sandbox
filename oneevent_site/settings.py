@@ -154,29 +154,29 @@ SOCIAL_AUTH_PIPELINE = (
     'social_core.pipeline.user.user_details',
 )
 
-SOCIAL_AUTH_GOOGLE_OAUTH2_KEY = os.environ.get('GOOGLE_OAUTH2_KEY')
-SOCIAL_AUTH_GOOGLE_OAUTH2_SECRET = os.environ.get('GOOGLE_OAUTH2_SECRET')
-if SOCIAL_AUTH_GOOGLE_OAUTH2_KEY and SOCIAL_AUTH_GOOGLE_OAUTH2_SECRET:
-    AUTHENTICATION_BACKENDS = (
-        'social_core.backends.google.GoogleOAuth2',
-    ) + AUTHENTICATION_BACKENDS
 
+for setting_name, backend_name, scope, extra_data in [
+    ('GOOGLE_OAUTH2', 'google.GoogleOAuth2', None, [('picture', 'user_avatar')]),
+    ('GITHUB', 'github.GithubOAuth2', ['user:email'], [('avatar_url', 'user_avatar')]),
+]:
+    key_env = setting_name + '_KEY'
+    secret_env = setting_name + '_SECRET'
 
-SOCIAL_AUTH_GITHUB_KEY = os.environ.get('GITHUB_KEY')
-SOCIAL_AUTH_GITHUB_SECRET = os.environ.get('GITHUB_SECRET')
-SOCIAL_AUTH_GITHUB_SCOPE = ["user:email"]
-if SOCIAL_AUTH_GITHUB_KEY and SOCIAL_AUTH_GITHUB_SECRET:
-    AUTHENTICATION_BACKENDS = (
-        'social_core.backends.github.GithubOAuth2',
-    ) + AUTHENTICATION_BACKENDS
+    key = os.environ.get(key_env)
+    secret = os.environ.get(secret_env)
 
+    if key and secret:
+        vars()['SOCIAL_AUTH_' + key_env] = key
+        vars()['SOCIAL_AUTH_' + secret_env] = secret
 
-SOCIAL_AUTH_GOOGLE_OAUTH2_EXTRA_DATA = [
-    ('picture', 'user_avatar')
-]
-SOCIAL_AUTH_GITHUB_EXTRA_DATA = [
-    ('avatar_url', 'user_avatar')
-]
+        AUTHENTICATION_BACKENDS = (
+          'social_core.backends.' + backend_name,
+        ) + AUTHENTICATION_BACKENDS
+
+        if scope:
+            vars()['SOCIAL_AUTH_' + setting_name + '_SCOPE'] = scope
+        if extra_data:
+            vars()['SOCIAL_AUTH_' + setting_name + '_EXTRA_DATA'] = extra_data
 
 
 # Internationalization
