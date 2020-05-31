@@ -1,6 +1,3 @@
-from social_django.models import UserSocialAuth
-
-
 def social_auth_extra_data(request):
     social = _get_prefered_social(request.user)
 
