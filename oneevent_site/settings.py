@@ -155,10 +155,10 @@ SOCIAL_AUTH_PIPELINE = (
 )
 
 
-for setting_name, backend_name, scope, extra_data in [
-    ('GOOGLE_OAUTH2', 'google.GoogleOAuth2', None, [('picture', 'user_avatar')]),
-    ('GITHUB', 'github.GithubOAuth2', ['user:email'], [('avatar_url', 'user_avatar')]),
-    ('FACEBOOK', 'facebook.FacebookOAuth2', ['email'], None),
+for setting_name, backend_name, scope, extra_data, profile_extra_params in [
+    ('GOOGLE_OAUTH2', 'google.GoogleOAuth2', None, [('picture', 'user_avatar')], None),
+    ('GITHUB', 'github.GithubOAuth2', ['user:email'], [('avatar_url', 'user_avatar')], None),
+    ('FACEBOOK', 'facebook.FacebookOAuth2', ['email'], None, {'fields': 'id, name, email'}),
 ]:
     key_env = setting_name + '_KEY'
     secret_env = setting_name + '_SECRET'
@@ -178,6 +178,8 @@ for setting_name, backend_name, scope, extra_data in [
             vars()['SOCIAL_AUTH_' + setting_name + '_SCOPE'] = scope
         if extra_data:
             vars()['SOCIAL_AUTH_' + setting_name + '_EXTRA_DATA'] = extra_data
+        if profile_extra_params:
+            vars()['SOCIAL_AUTH_' + setting_name + '_PROFILE_EXTRA_PARAMS'] = profile_extra_params
 
 
 # Internationalization
