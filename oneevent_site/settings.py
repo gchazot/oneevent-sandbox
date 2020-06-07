@@ -118,6 +118,14 @@ else:
 
     SOCIAL_AUTH_POSTGRES_JSONFIELD = True
 
+# Email
+EMAIL_HOST = 'smtp.sendgrid.net'
+EMAIL_PORT = '465'
+EMAIL_HOST_USER = 'apikey'
+EMAIL_HOST_PASSWORD = os.environ.get('EMAIL_HOST_PASSWORD')
+EMAIL_USE_SSL = True
+ONEEVENT_CALENDAR_INVITE_FROM = "no-reply@oneevent-sandbox.chazot.dev"
+
 
 # Password validation
 # https://docs.djangoproject.com/en/1.11/ref/settings/#auth-password-validators
