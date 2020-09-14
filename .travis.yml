@@ -3,7 +3,9 @@ python:
   - '3.8'
 env:
   - DJANGO_DEVELOPMENT=True
+install:
+  - pipenv sync
 script:
-  - "python manage.py check"
-  - "python manage.py test"
-  - "python manage.py makemigrations --dry-run --check"
+  - pipenv run python manage.py check
+  - pipenv run python manage.py test
+  - pipenv run python manage.py makemigrations --dry-run --check
