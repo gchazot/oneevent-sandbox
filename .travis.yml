@@ -5,6 +5,7 @@ python:
 env:
   - DJANGO_DEVELOPMENT=True
 install:
+  - pip install --upgrade pipenv
   - pipenv sync
 script:
   - pipenv run python manage.py check
