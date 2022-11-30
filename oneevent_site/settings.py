@@ -30,7 +30,7 @@ if DEVELOPMENT:
     ALLOWED_HOSTS = ['*']
 else:
     ALLOWED_HOSTS = [
-        'oneevent-sandbox.herokuapp.com',
+        # TODO: Fill in once a hosting has been found
     ]
 
 
