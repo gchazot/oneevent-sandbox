@@ -3,4 +3,4 @@
 # oneevent-sandbox
 Sample website for the [OneEvent Django application](https://github.com/gchazot/OneEvent)
 
-It runs on Heroku and adds social login using `python-social-auth`
+It is not currently hosted anywhere while I look for a convenient free provider.
