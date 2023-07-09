@@ -7,11 +7,11 @@ RUN pip install pipenv
 # Tell pipenv to create venv in the current directory
 ENV PIPENV_VENV_IN_PROJECT=1
 
-ADD Pipfile /usr/src/
+ADD Pipfile Pipfile.lock /usr/src/
 
 WORKDIR /usr/src
 
-RUN pipenv install
+RUN pipenv sync
 
 FROM docker.io/python:3.9-slim AS runtime
 

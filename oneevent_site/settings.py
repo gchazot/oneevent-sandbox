@@ -27,12 +27,11 @@ DEBUG = os.environ.get('DJANGO_DEBUG', False) in ('1', 'True')
 DEVELOPMENT = os.environ.get('DJANGO_DEVELOPMENT', False) in ('1', 'True')
 
 if DEVELOPMENT:
-    ALLOWED_HOSTS = ['*']
+    default_allowed_hosts = '*'
 else:
-    ALLOWED_HOSTS = [
-        # TODO: Fill in once a hosting has been found
-    ]
+    default_allowed_hosts = '127.0.0.1,localhost'
 
+ALLOWED_HOSTS = os.environ.get('ALLOWED_HOSTS', default_allowed_hosts).split(',')
 
 # Application definition
 
