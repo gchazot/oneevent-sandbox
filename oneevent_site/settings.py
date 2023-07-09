@@ -98,12 +98,11 @@ if DEVELOPMENT:
         }
     }
 else:
-    DATABASE_URL = os.environ.get('DATABASE_URL')
-    db_connection_string = DATABASE_URL.split('//')[1]
-    db_user_password, db_host_port_name = db_connection_string.split('@')
-    db_user, db_password = db_user_password.split(':')
-    db_host_port, db_name = db_host_port_name.split('/')
-    db_host, db_port = db_host_port.split(':')
+    db_host = os.environ.get('POSTGRES_SERVICE_HOST')
+    db_port = os.environ.get('POSTGRES_SERVICE_PORT')
+    db_name = os.environ.get('POSTGRES_DB')
+    db_user = os.environ.get('POSTGRES_USER')
+    db_password = os.environ.get('POSTGRES_PASSWORD')
 
     DATABASES = {
         'default': {
