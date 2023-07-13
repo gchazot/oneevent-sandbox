@@ -1,5 +1,5 @@
 on:
-  push:  # TODO: replace
+  push:
     branches:
       - main
 
@@ -34,3 +34,5 @@ jobs:
           push: true
           tags: |
             ghcr.io/${{ github.repository_owner }}/oneevent-sandbox:latest
+          cache-from: type=gha
+          cache-to: type=gha,mode=max
