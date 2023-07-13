@@ -4,7 +4,7 @@ on:
       - main
 
 jobs:
-  docker:
+  build-and-deploy:
     runs-on: ubuntu-latest
     permissions:
       contents: read
