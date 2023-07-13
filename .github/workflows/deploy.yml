@@ -36,3 +36,22 @@ jobs:
             ghcr.io/${{ github.repository_owner }}/oneevent-sandbox:latest
           cache-from: type=gha
           cache-to: type=gha,mode=max
+
+      - name: Deploy
+        env:
+          KUBECONFIG: "kubeconfig"
+          KUBECONFIG_CONTENT: ${{ secrets.KUBE_CONFIG_FILE }}
+          CHART_SECRETS: "secret_values.yml"
+          CHART_SECRETS_CONTENT: ${{ secrets.CHART_VALUES }}
+        run: |
+          echo ${KUBECONFIG_CONTENT} | base64 -d > ${KUBECONFIG}
+          chmod 600 ${KUBECONFIG}
+          echo ${CHART_SECRETS_CONTENT} | base64 -d > ${CHART_SECRETS}
+          chmod 600 ${CHART_SECRETS}
+
+          helm upgrade --install \
+            --namespace oneevent-sandbox --create-namespace \
+            oneevent-sandbox \
+            chart/ \
+            --values chart/values.yaml \
+            --values ${CHART_SECRETS}

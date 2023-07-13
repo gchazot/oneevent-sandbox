@@ -1,0 +1,13 @@
+webserverImage: "ghcr.io/gchazot/oneevent-sandbox:latest"
+
+externalHostnames:
+  - "oneevent.example.com"
+
+webserverReplica: 1
+
+dbCredentialsSecret: db-secret-credentials
+
+dbCredentials:
+  database: myDbName
+  username: myDbUser
+  password: some-random-password
