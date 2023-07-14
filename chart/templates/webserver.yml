@@ -1,0 +1,117 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: webserver
+spec:
+  replicas: {{ .Values.webserverReplica }}
+  selector:
+    matchLabels:
+      app: oneevent
+      component: webserver
+  template:
+    metadata:
+      labels:
+        app: oneevent
+        component: webserver
+    spec:
+      containers:
+        - name: webserver
+          image: "{{ .Values.webserverImage }}"
+          imagePullPolicy: Always
+          envFrom:
+            - configMapRef:
+                name: {{ .Values.dbCredentialsSecret }}
+          env:
+            - name: ALLOWED_HOSTS
+              value: {{  join "," .Values.externalHostnames }}
+          ports:
+            - name: http
+              containerPort: 8000
+          livenessProbe:
+            httpGet:
+              path: /ping/
+              port: 8000
+              httpHeaders:
+                - name: Host
+                  value: "{{ first .Values.externalHostnames }}"
+          readinessProbe:
+            httpGet:
+              path: /ping/
+              port: 8000
+              httpHeaders:
+                - name: Host
+                  value: "{{ first .Values.externalHostnames }}"
+      initContainers:
+        - name: migrations
+          image: "{{ .Values.webserverImage }}"
+          imagePullPolicy: Always
+          envFrom:
+            - configMapRef:
+                name: {{ .Values.dbCredentialsSecret }}
+          command: ["/bin/sh"]
+          args:
+            - "-c"
+            - /usr/src/.venv/bin/python manage.py migrate --no-input
+
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: webserver
+spec:
+  type: NodePort
+  ports:
+    - port: 80
+      targetPort: http
+      protocol: TCP
+      name: http
+  selector:
+    app: oneevent
+    component: webserver
+
+---
+apiVersion: cert-manager.io/v1
+kind: Certificate
+metadata:
+  name: ingress-tls
+spec:
+  dnsNames:
+    {{- range .Values.externalHostnames }}
+    - "{{ . }}"
+    {{- end }}
+  issuerRef:
+    kind: ClusterIssuer
+    name: letsencrypt-production
+  secretName: ingress-tls
+  duration: 2160h # 90d
+  renewBefore: 360h # 15d
+  usages:
+    - digital signature
+    - key encipherment
+
+---
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: oneevent-webserver
+spec:
+  ingressClassName: traefik
+  tls:
+    - hosts:
+        {{- range .Values.externalHostnames }}
+        - "{{ . }}"
+        {{- end }}
+      secretName: ingress-tls
+  rules:
+    {{- range .Values.externalHostnames }}
+    - host: "{{ . }}"
+      http:
+        paths:
+          - path: "/"
+            pathType: Prefix
+            backend:
+              service:
+                name: webserver
+                port:
+                  number: 80
+    {{- end }}

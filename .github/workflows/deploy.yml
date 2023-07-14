@@ -1,0 +1,57 @@
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  build-and-deploy:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      packages: write
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v3
+
+      - name: Set up QEMU
+        uses: docker/setup-qemu-action@v2
+
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v2
+
+      - name: Login to GitHub Container Registry
+        uses: docker/login-action@v2
+        with:
+          registry: ghcr.io
+          username: ${{ github.repository_owner }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Build and push
+        uses: docker/build-push-action@v4
+        with:
+          context: .
+          platforms: linux/amd64,linux/arm64
+          push: true
+          tags: |
+            ghcr.io/${{ github.repository_owner }}/oneevent-sandbox:latest
+          cache-from: type=gha
+          cache-to: type=gha,mode=max
+
+      - name: Deploy
+        env:
+          KUBECONFIG: "kubeconfig"
+          KUBECONFIG_CONTENT: ${{ secrets.KUBE_CONFIG_FILE }}
+          CHART_SECRETS: "secret_values.yml"
+          CHART_SECRETS_CONTENT: ${{ secrets.CHART_VALUES }}
+        run: |
+          echo ${KUBECONFIG_CONTENT} | base64 -d > ${KUBECONFIG}
+          chmod 600 ${KUBECONFIG}
+          echo ${CHART_SECRETS_CONTENT} | base64 -d > ${CHART_SECRETS}
+          chmod 600 ${CHART_SECRETS}
+
+          helm upgrade --install \
+            --namespace oneevent-sandbox --create-namespace \
+            oneevent-sandbox \
+            chart/ \
+            --values chart/values.yaml \
+            --values ${CHART_SECRETS}
