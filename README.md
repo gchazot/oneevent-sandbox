@@ -3,4 +3,7 @@
 # oneevent-sandbox
 Sample website for the [OneEvent Django application](https://github.com/gchazot/OneEvent)
 
-It is not currently hosted anywhere while I look for a convenient free provider.
+This repo drives the deployment available for trying at https://oneevent-sandbox.chazot.dev/.
+The main interests of this sandbox are:
+* is the addition of Python Social-auth allowing OAuth sign-in
+* the use of customisations allowed by the Django app
