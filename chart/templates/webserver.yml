@@ -24,6 +24,12 @@ spec:
           env:
             - name: ALLOWED_HOSTS
               value: {{  join "," .Values.externalHostnames }}
+            {{- range .Values.socialAuths }}
+            - name: {{.name}}_KEY
+              value: "{{ .key }}"
+            - name: {{.name}}_SECRET
+              value: "{{ .secret }}"
+            {{- end }}
           ports:
             - name: http
               containerPort: 8000

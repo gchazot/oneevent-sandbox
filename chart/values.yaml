@@ -11,3 +11,14 @@ dbCredentials:
   database: myDbName
   username: myDbUser
   password: some-random-password
+
+socialAuths:
+  - name: GOOGLE_OAUTH2
+    key: ""
+    secret: ""
+  - name: GITHUB
+    key: ""
+    secret: ""
+  - name: FACEBOOK
+    key: ""
+    secret: ""
