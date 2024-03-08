@@ -1,4 +1,4 @@
-FROM docker.io/python:3.9 AS builder
+FROM docker.io/python:3.11 AS builder
 
 RUN apt-get update
 RUN apt-get install -y build-essential libpq-dev
@@ -11,9 +11,9 @@ ADD Pipfile Pipfile.lock /usr/src/
 
 WORKDIR /usr/src
 
-RUN pipenv sync
+RUN pipenv sync --verbose
 
-FROM docker.io/python:3.9-slim AS runtime
+FROM docker.io/python:3.11-slim AS runtime
 
 ARG USERNAME=oneevent
 ARG USER_UID=1000
