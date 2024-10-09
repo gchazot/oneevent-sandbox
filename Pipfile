@@ -7,7 +7,7 @@ verify_ssl = true
 
 [packages]
 django-oneevent = "*"
-django = "~=3.2"
+django = "~=4.2"
 django-extensions = "~=3.2"
 social-auth-app-django = "~=5.4"
 psycopg2 = "~=2.8"
