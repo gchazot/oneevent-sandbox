@@ -22,29 +22,33 @@ spec:
           envFrom:
             - configMapRef:
                 name: {{ .Values.db.credentials.secretName }}
+      {{- if .Values.db.persistence.enabled }}
           volumeMounts:
             - mountPath: /var/lib/postgres/data
               name: db-data
       volumes:
         - name: db-data
           persistentVolumeClaim:
-            claimName: db-persistent-volume-claim
+            claimName: {{ .Values.db.persistence.pvcName }}
+      {{- end }}
 
+{{- if and .Values.db.persistence.enabled .Values.db.persistence.createPvc }}
 ---
 apiVersion: v1
 kind: PersistentVolumeClaim
 metadata:
-  name: db-persistent-volume-claim
+  name: {{ .Values.db.persistence.pvcName }}
   labels:
     app: oneevent
     component: database
 spec:
-  storageClassName: local-path
+  storageClassName: {{ .Values.db.persistence.storageClassName }}
   accessModes:
     - ReadWriteOnce
   resources:
     requests:
-      storage: 1Gi
+      storage: {{ .Values.db.persistence.storage }}
+{{- end }}
 
 ---
 apiVersion: v1

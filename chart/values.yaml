@@ -28,4 +28,9 @@ db:
     database: myDbName
     username: myDbUser
     password: some-random-password
-
+  persistence:
+    enabled: true
+    pvcName: db-persistent-volume-claim
+    createPvc: true
+    storage: 1Gi
+    storageClassName: local-path
