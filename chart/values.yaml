@@ -1,16 +1,14 @@
-webserverImage: "ghcr.io/gchazot/oneevent-sandbox:latest"
+webserver:
+  image: "ghcr.io/gchazot/oneevent-sandbox:latest"
+  replicas: 1
+  hostnames: []
 
-externalHostnames:
-  - "oneevent.example.com"
-
-webserverReplica: 1
-
-dbCredentialsSecret: db-secret-credentials
-
-dbCredentials:
-  database: myDbName
-  username: myDbUser
-  password: some-random-password
+db:
+  credentials:
+    secretName: db-secret-credentials
+    database: myDbName
+    username: myDbUser
+    password: some-random-password
 
 socialAuths:
   - name: GOOGLE_OAUTH2

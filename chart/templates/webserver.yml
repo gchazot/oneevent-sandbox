@@ -3,7 +3,7 @@ kind: Deployment
 metadata:
   name: webserver
 spec:
-  replicas: {{ .Values.webserverReplica }}
+  replicas: {{ .Values.webserver.replicas }}
   selector:
     matchLabels:
       app: oneevent
@@ -16,14 +16,14 @@ spec:
     spec:
       containers:
         - name: webserver
-          image: "{{ .Values.webserverImage }}"
+          image: "{{ .Values.webserver.image }}"
           imagePullPolicy: Always
           envFrom:
             - configMapRef:
-                name: {{ .Values.dbCredentialsSecret }}
+                name: {{ .Values.db.credentials.secretName }}
           env:
             - name: ALLOWED_HOSTS
-              value: {{  join "," .Values.externalHostnames }}
+              value: {{  join "," .Values.webserver.hostnames }}
             {{- range .Values.socialAuths }}
             - name: {{.name}}_KEY
               value: "{{ .key }}"
@@ -39,21 +39,21 @@ spec:
               port: 8000
               httpHeaders:
                 - name: Host
-                  value: "{{ first .Values.externalHostnames }}"
+                  value: "{{ first .Values.webserver.hostnames }}"
           readinessProbe:
             httpGet:
               path: /ping/
               port: 8000
               httpHeaders:
                 - name: Host
-                  value: "{{ first .Values.externalHostnames }}"
+                  value: "{{ first .Values.webserver.hostnames }}"
       initContainers:
         - name: migrations
-          image: "{{ .Values.webserverImage }}"
+          image: "{{ .Values.webserver.image }}"
           imagePullPolicy: Always
           envFrom:
             - configMapRef:
-                name: {{ .Values.dbCredentialsSecret }}
+                name: {{ .Values.db.credentials.secretName }}
           command: ["/bin/sh"]
           args:
             - "-c"
@@ -82,7 +82,7 @@ metadata:
   name: ingress-tls
 spec:
   dnsNames:
-    {{- range .Values.externalHostnames }}
+    {{- range .Values.webserver.hostnames }}
     - "{{ . }}"
     {{- end }}
   issuerRef:
@@ -104,12 +104,12 @@ spec:
   ingressClassName: traefik
   tls:
     - hosts:
-        {{- range .Values.externalHostnames }}
+        {{- range .Values.webserver.hostnames }}
         - "{{ . }}"
         {{- end }}
       secretName: ingress-tls
   rules:
-    {{- range .Values.externalHostnames }}
+    {{- range .Values.webserver.hostnames }}
     - host: "{{ . }}"
       http:
         paths:
