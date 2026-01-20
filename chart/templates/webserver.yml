@@ -1,9 +1,10 @@
+{{ with .Values.webserver }}
 apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: webserver
 spec:
-  replicas: {{ .Values.webserver.replicas }}
+  replicas: {{ .replicas }}
   selector:
     matchLabels:
       app: oneevent
@@ -16,18 +17,20 @@ spec:
     spec:
       containers:
         - name: webserver
-          image: "{{ .Values.webserver.image }}"
+          image: "{{ .image }}"
           imagePullPolicy: Always
           envFrom:
             - configMapRef:
-                name: {{ .Values.db.credentials.secretName }}
+                name: {{ $.Values.db.credentials.secretName }}
           env:
+            {{- with .hostnames }}
             - name: ALLOWED_HOSTS
-              value: {{  join "," .Values.webserver.hostnames }}
-            {{- range .Values.socialAuths }}
-            - name: {{.name}}_KEY
+              value: {{  join "," . }}
+            {{- end }}
+            {{- range .socialAuths }}
+            - name: {{ .name }}_KEY
               value: "{{ .key }}"
-            - name: {{.name}}_SECRET
+            - name: {{ .name }}_SECRET
               value: "{{ .secret }}"
             {{- end }}
           ports:
@@ -37,23 +40,27 @@ spec:
             httpGet:
               path: /ping/
               port: 8000
+              {{- with .hostnames }}
               httpHeaders:
                 - name: Host
-                  value: "{{ first .Values.webserver.hostnames }}"
+                  value: "{{ first . }}"
+              {{- end }}
           readinessProbe:
             httpGet:
               path: /ping/
               port: 8000
+              {{- with .hostnames }}
               httpHeaders:
                 - name: Host
-                  value: "{{ first .Values.webserver.hostnames }}"
+                  value: "{{ first . }}"
+              {{- end }}
       initContainers:
         - name: migrations
-          image: "{{ .Values.webserver.image }}"
+          image: "{{ .image }}"
           imagePullPolicy: Always
           envFrom:
             - configMapRef:
-                name: {{ .Values.db.credentials.secretName }}
+                name: {{ $.Values.db.credentials.secretName }}
           command: ["/bin/sh"]
           args:
             - "-c"
@@ -75,6 +82,8 @@ spec:
     app: oneevent
     component: webserver
 
+{{- if .ingress.enabled }}
+{{- if .ingress.tls.enabled }}
 ---
 apiVersion: cert-manager.io/v1
 kind: Certificate
@@ -82,18 +91,19 @@ metadata:
   name: ingress-tls
 spec:
   dnsNames:
-    {{- range .Values.webserver.hostnames }}
+    {{- range .hostnames }}
     - "{{ . }}"
     {{- end }}
   issuerRef:
-    kind: ClusterIssuer
-    name: letsencrypt-production
-  secretName: ingress-tls
+    kind: {{ .ingress.tls.issuer.kind }}
+    name: {{ .ingress.tls.issuer.name }}
+  secretName: {{ .ingress.tls.secretName }}
   duration: 2160h # 90d
   renewBefore: 720h # 30d
   usages:
     - digital signature
     - key encipherment
+{{- end }}
 
 ---
 apiVersion: networking.k8s.io/v1
@@ -102,14 +112,16 @@ metadata:
   name: oneevent-webserver
 spec:
   ingressClassName: traefik
+  {{- if .ingress.tls.enabled }}
   tls:
     - hosts:
-        {{- range .Values.webserver.hostnames }}
+        {{- range .hostnames }}
         - "{{ . }}"
         {{- end }}
-      secretName: ingress-tls
+      secretName: {{ .ingress.tls.secretName }}
+  {{- end }}
   rules:
-    {{- range .Values.webserver.hostnames }}
+    {{- range .hostnames }}
     - host: "{{ . }}"
       http:
         paths:
@@ -121,3 +133,5 @@ spec:
                 port:
                   number: 80
     {{- end }}
+{{- end }}
+{{- end }}

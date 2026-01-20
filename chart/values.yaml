@@ -1,22 +1,31 @@
 webserver:
   image: "ghcr.io/gchazot/oneevent-sandbox:latest"
   replicas: 1
+  ingress:
+    enabled: true
+    tls:
+      enabled: true
+      secretName: ingress-tls
+      issuer:
+        kind: ClusterIssuer
+        name: ""
   hostnames: []
+  socialAuths:
+    - name: GOOGLE_OAUTH2
+      key: ""
+      secret: ""
+    - name: GITHUB
+      key: ""
+      secret: ""
+    - name: FACEBOOK
+      key: ""
+      secret: ""
 
 db:
   credentials:
     secretName: db-secret-credentials
+    create: true
     database: myDbName
     username: myDbUser
     password: some-random-password
 
-socialAuths:
-  - name: GOOGLE_OAUTH2
-    key: ""
-    secret: ""
-  - name: GITHUB
-    key: ""
-    secret: ""
-  - name: FACEBOOK
-    key: ""
-    secret: ""
