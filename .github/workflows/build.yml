@@ -1,4 +1,4 @@
-name: Django Tests
+name: Build and test Image
 
 on: [push]
 
