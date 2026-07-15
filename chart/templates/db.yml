@@ -1,8 +1,9 @@
 apiVersion: apps/v1
-kind: Deployment
+kind: StatefulSet
 metadata:
   name: database
 spec:
+  serviceName: postgres
   replicas: 1
   selector:
     matchLabels:
@@ -25,11 +26,26 @@ spec:
       {{- if .Values.db.persistence.enabled }}
           volumeMounts:
             - mountPath: /var/lib/postgres/data
-              name: db-data
+              name: {{ .Values.db.persistence.pvcName }}
+  {{- if .Values.db.persistence.createPvc }}
       volumes:
-        - name: db-data
+        - name: {{ .Values.db.persistence.pvcName }}
           persistentVolumeClaim:
             claimName: {{ .Values.db.persistence.pvcName }}
+  {{ else }}
+  volumeClaimTemplates:
+    - apiVersion: v1
+      kind: PersistentVolumeClaim
+      metadata:
+        name: {{ .Values.db.persistence.pvcName }}
+      spec:
+        accessModes:
+          - ReadWriteOnce
+        resources:
+          requests:
+            storage: {{ .Values.db.persistence.storage }}
+        storageClassName: {{ .Values.db.persistence.storageClassName }}
+  {{- end }}
       {{- end }}
 
 {{- if and .Values.db.persistence.enabled .Values.db.persistence.createPvc }}
